@@ -1,23 +1,21 @@
-// sketch7: a simple mic sketch
-//
-// Click    = turn on the microphone
-// Mouse    = moves the small circle
-// Any key  = changes the colors and plays a note
-// Mic      = louder sound makes the big circle bigger
-// Webcam   = shown in one color (monochrome) behind everything
+// Click: turn on the microphone
+// Mouse:  moves the small circle
+// Any key : changes the colors and plays a note
+// Mic : louder sound makes the big circle bigger
+// Webcam: shown in monochrome behind everything, changes color when any key is pressed(only when mic is on)
 
 let mic;
 let amp;
 let osc;
 let cam;
 let micOn = false;
-let c = "orange";
-let mono = "#00aaff"; // the one color of the webcam
+let c = "red";
+let mono = "white"; //color for the webcam
 
-function setup() {
+function setup () {
   createCanvas(640, 480);
 
-  // webcam (hidden as an html element, we draw it ourselves)
+  // webcam
   cam = createCapture(VIDEO);
   cam.size(640, 480);
   cam.hide();
@@ -25,10 +23,10 @@ function setup() {
   mic = new p5.AudioIn();
   amp = new p5.Amplitude();
   mic.connect(amp);
-  osc = new p5.Oscillator(440, "sine");
+  osc = new p5.Oscillator(40, "sine");
 }
 
-function draw() {
+function draw () {
   // draw the webcam, make it gray, then tint it with one color
   push();
   image(cam, 0, 0, width, height);
@@ -44,9 +42,9 @@ function draw() {
   if (micOn) {
     level = amp.getLevel();
   }
-  let size = map(level, 0, 0.3, 50, 400);
+  let size = map(level, 0, 0.1, 50, 400);
 
-  // big circle in the middle (changes with the mic)
+  // big circle in the middle
   push();
   translate(width / 2, height / 2);
   fill(c);
@@ -61,7 +59,6 @@ function draw() {
   ellipse(0, 0, 30, 30);
   pop();
 
-  // text
   push();
   fill(255);
   if (micOn) {
@@ -72,19 +69,19 @@ function draw() {
   pop();
 }
 
-function mousePressed() {
+function mousePressed () {
   userStartAudio();
   mic.start();
   micOn = true;
 }
 
-function keyPressed() {
+function keyPressed () {
   c = color(random(255), random(255), random(255));
   mono = color(random(255), random(255), random(255));
   osc.freq(random(200, 600));
   osc.start();
 }
 
-function keyReleased() {
+function keyReleased () {
   osc.stop();
 }
